@@ -1,0 +1,15 @@
+# Rename this file to .env and adjust environ vars
+
+# Database credentials
+DB_HOST="host"
+DB_NAME="name"
+DB_USER="user"
+DB_PASSWORD="secret_password"
+
+# The token for a bot that can send logs to admins
+ADMIN_TOKEN="12345678:AAAAABBBBBCCCCCDDDDDEEEEEE"
+# Teleg Id's of admins
+ADMINS_CHAT_ID="admin_chat_1, admin_chat_2"
+
+# Sleeps for given seconds after sending message
+SLEEP_TIME=15

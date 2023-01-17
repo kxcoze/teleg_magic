@@ -1,0 +1,7 @@
+venv
+run.sh
+*.csv
+*.session
+*.log
+__pycache__
+.env
