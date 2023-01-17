@@ -1,8 +1,16 @@
 from dataclasses import dataclass
 from os import getenv
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+BASE_DIR = Path("../")
+load_dotenv(dotenv_path=BASE_DIR / Path(".env"))
 
 ADMIN_TOKEN = getenv("ADMIN_TOKEN")
 ADMINS_CHAT_ID = getenv("ADMINS_CHAT_ID")
+
+MESSAGE_TO_SENT = "hi"
 
 
 @dataclass
@@ -23,22 +31,31 @@ class API:
 class Config:
     db: DB
     api: API
+    proxy: dict
     sleep_time: int
 
 
 def load_config():
     return Config(
-        db = DB(
-            host=getenv('DB_HOST'),
-            db_name=getenv('DB_NAME'),
-            user=getenv('DB_USER'),
-            password=getenv('DB_PASSWORD'),
+        db=DB(
+            host=getenv("DB_HOST"),
+            db_name=getenv("DB_NAME"),
+            user=getenv("DB_USER"),
+            password=getenv("DB_PASSWORD"),
         ),
-        api = API(
-            id=getenv('API_ID'),
-            hash=getenv('API_HASH'),
+        api=API(
+            id=getenv("API_ID"),
+            hash=getenv("API_HASH"),
         ),
-        sleep_time=int(getenv('SLEEP_TIME')),
+        proxy=dict(
+            proxy_type=getenv("PROXY_TYPE"),
+            addr=getenv("PROXY_ADDR"),
+            port=int(getenv("PROXY_PORT")),
+            username=getenv("PROXY_USERNAME"),
+            password=getenv("PROXY_PASSWORD"),
+            rdns=bool(getenv("PROXY_RDNS")),
+        ),
+        sleep_time=int(getenv("SLEEP_TIME")),
     )
 
 
@@ -47,19 +64,19 @@ dict_config = {
     "disable_existing_loggers": False,
     "formatters": {
         "telegram_formatter": {
-            "format": "{levelname} — {module}:{funcName}:{lineno} — {message}",
+            "format": "{levelname} — {message}",
             "style": "{",
         },
     },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "level": "WARNING",
+            "level": "INFO",
         },
         "file": {
             "class": "logging.FileHandler",
             "level": "WARNING",
-            "filename": "messages.log",
+            "filename": BASE_DIR / "messages.log",
         },
         "telegram": {
             "level": "WARNING",
@@ -69,10 +86,10 @@ dict_config = {
             "queue_size": 1000,  # 1000 by default
             "token": ADMIN_TOKEN,
             "chats": ADMINS_CHAT_ID,
-        }
+        },
     },
     "root": {
-        "level": 'INFO',
+        "level": "INFO",
         "handlers": ["console", "file", "telegram"],
     },
 }
